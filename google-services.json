@@ -1,0 +1,68 @@
+{
+  "project_info": {
+    "project_number": "541576186641",
+    "firebase_url": "https://react-native-mmi-app-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "react-native-mmi-app",
+    "storage_bucket": "react-native-mmi-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:541576186641:web:e9f31a1350f26cb388dab0",
+        "android_client_info": {
+          "package_name": "com.awesomeproject"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDv45Us8BhCgbxm-f0kU5vJFIuUcLyYvDE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:541576186641:web:e9f31a1350f26cb388dab0",
+        "android_client_info": {
+          "package_name": "com.rism.MMiInfo"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDv45Us8BhCgbxm-f0kU5vJFIuUcLyYvDE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:541576186641:web:e9f31a1350f26cb388dab0",
+        "android_client_info": {
+          "package_name": "com.rism.mmiinfo"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDv45Us8BhCgbxm-f0kU5vJFIuUcLyYvDE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
