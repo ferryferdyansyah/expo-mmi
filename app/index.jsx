@@ -17,7 +17,7 @@ const App = () => {
                 </View>
             </View>
             <View style={{ alignItems: 'center', marginHorizontal: 40 }}>
-                <TouchableOpacity activeOpacity={0.8} style={{ width: 60, backgroundColor: '#f8981d', alignItems: 'center', justifyContent: 'center', height: 60, borderRadius: 50 }}>
+                <TouchableOpacity activeOpacity={0.8} style={{ width: 60, backgroundColor: '#2ccbef', alignItems: 'center', justifyContent: 'center', height: 60, borderRadius: 50 }}>
                     <Link href="/home">
                         <MaterialCommunityIcons
                             name="arrow-right-thin"

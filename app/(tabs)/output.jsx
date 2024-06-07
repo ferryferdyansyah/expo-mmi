@@ -1,9 +1,19 @@
 import React, { useEffect, useState } from "react";
-import { View, StyleSheet, PermissionsAndroid, Alert } from "react-native";
+import { View, StyleSheet, PermissionsAndroid, Alert, Text } from "react-native";
 import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 
 const API_URL =
   "https://react-native-mmi-app-default-rtdb.asia-southeast1.firebasedatabase.app/data.json?auth=IOf8J6OJbDvEv90XK0LLfscCfaAaFJPNcBRp8PPX";
+
+const MMIMarker = ({ coordinate, mmi }) => {
+  return (
+    <Marker coordinate={coordinate}>
+      <View style={styles.marker}>
+        <Text style={styles.markerText}>{mmi}</Text>
+      </View>
+    </Marker>
+  );
+};
 
 const Maps = () => {
   const [markers, setMarkers] = useState([]);
@@ -23,9 +33,9 @@ const Maps = () => {
 
       return (
         granted["android.permission.ACCESS_FINE_LOCATION"] ===
-          PermissionsAndroid.RESULTS.GRANTED &&
+        PermissionsAndroid.RESULTS.GRANTED &&
         granted["android.permission.ACCESS_COARSE_LOCATION"] ===
-          PermissionsAndroid.RESULTS.GRANTED
+        PermissionsAndroid.RESULTS.GRANTED
       );
     } catch (err) {
       console.warn(err);
@@ -52,7 +62,7 @@ const Maps = () => {
       console.error("Error fetching marker data: ", error);
       Alert.alert("Error", "Failed to fetch marker data");
     }
-  };
+  }; 
 
   useEffect(() => {
     const initialize = async () => {
@@ -80,14 +90,13 @@ const Maps = () => {
         initialRegion={initialRegion}
       >
         {markers.map((marker) => (
-          <Marker
+          <MMIMarker
             key={marker.id}
             coordinate={{
               latitude: marker.coordinate.latitude,
               longitude: marker.coordinate.longitude,
             }}
-            title={marker.tipeMMI}
-            description={marker.namaPengirim}
+            mmi={marker.tipeMMI}
           />
         ))}
       </MapView>
@@ -102,6 +111,22 @@ const styles = StyleSheet.create({
   map: {
     width: "100%",
     height: "100%",
+  },
+  marker: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: "rgba(0, 122, 255, 0.8)",
+    justifyContent: "center",
+    alignItems: "center",
+    borderWidth: 2,
+    borderColor: "white",
+  },
+  markerText: {
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center",
+    fontSize:10
   },
 });
 

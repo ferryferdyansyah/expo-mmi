@@ -13,13 +13,32 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "config": {
+        "googleMapsApiKey": "AIzaSyA8gRUsHKHrH2FXot1-OBBnTGMXmTOYxNE"
+      }
     },
     "android": {
       "googleServicesFile": "./google-services.json",
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
+      },
+      "permissions": [
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION",
+        "CAMERA",
+        "WRITE_EXTERNAL_STORAGE",
+        "READ_EXTERNAL_STORAGE",
+        "NOTIFICATIONS",
+        "USER_LOCATION",
+        "LOCATION",
+        "INTERNET"
+      ],
+       "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyA8gRUsHKHrH2FXot1-OBBnTGMXmTOYxNE"
+        }
       }
     },
     "web": {
@@ -29,7 +48,14 @@
     },
     "plugins": [
       "expo-router",
-      "@react-native-firebase/app"
+      "@react-native-firebase/app",
+      "expo-notifications",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "The app accesses your photos to let you share them with your friends."
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true

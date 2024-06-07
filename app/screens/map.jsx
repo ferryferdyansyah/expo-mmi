@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Text, View, StyleSheet, ScrollView, TouchableHighlight, Animated } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
+import { Link } from 'expo-router';
 
 const App = () => {
     const [dataGempa, setDataGempa] = useState([]);
@@ -197,7 +198,9 @@ const App = () => {
                     </View>
 
                     <View style={{ alignItems: 'center', marginTop: 0, backgroundColor: 'white', justifyContent: 'center', padding: 10, marginHorizontal: 0, marginVertical: 5, borderRadius: 25 }}>
-                        <TouchableHighlight style={{ backgroundColor: '#f8981d', width: 230, height: 40, borderRadius: 15 }}><Text style={{ lineHeight: 40, textAlign: 'center', color: 'white', fontWeight: 'bold' }}>Lihat Peta</Text></TouchableHighlight>
+                        <TouchableHighlight style={{ backgroundColor: '#2ccbef', width: 230, height: 40, borderRadius: 15 }}>
+                            <Link href='/screens/peta' style={{ lineHeight: 40, textAlign: 'center', color: 'white', fontWeight: 'bold' }}>Lihat</Link>
+                        </TouchableHighlight>
                     </View>
                 </ScrollView>
             </View>
@@ -270,7 +273,7 @@ const styles = StyleSheet.create({
         marginTop: 10
     },
     iconBot: {
-        color: '#f8981d',
+        color: '#2ccbef',
         fontSize: 25
     },
     textIconBot: {

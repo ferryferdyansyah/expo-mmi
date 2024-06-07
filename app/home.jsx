@@ -114,7 +114,7 @@ const MainScreen = () => {
                         <View style={styles.cardContent}>
                             <Link href="/screens/mmi" style={styles.buttonCard}>
                                 <Text style={styles.cardTitle}>MMI (Modified Mercalli Intensity)</Text>
-                                <MaterialCommunityIcons name='chevron-right' size={20} color='#f8981d' />
+                                <MaterialCommunityIcons name='chevron-right' size={20} color='#2CCBEF' />
                             </Link>
                             <View style={styles.textCard}>
                                 <Image
@@ -134,13 +134,13 @@ const MainScreen = () => {
                         <View style={styles.cardContent}>
                             <Link href='/input' style={styles.buttonCard}>
                                 <Text style={styles.cardTitle}>Laporkan Gempa</Text>
-                                <MaterialCommunityIcons name='chevron-right' size={20} color='#f8981d' />
+                                <MaterialCommunityIcons name='chevron-right' size={20} color='#2CCBEF' />
                             </Link>
                             <View style={styles.textCard}>
                                 <View>
                                     <Text style={[styles.textTitle, { textAlign: 'justify', marginLeft: 30, marginRight: 5 }]}>Laporkan sekarang jika anda merasa gempa bumi atau
                                         sudah melihat dampak dari gempa bumi sesuai dengan MMI</Text>
-                                    <TouchableOpacity activeOpacity={0.5} style={{ marginLeft: 30, backgroundColor: "#f8981d", width: 140, height: 40, borderRadius: 10, alignItems: 'center', justifyContent: 'center', marginTop: 10 }}>
+                                    <TouchableOpacity activeOpacity={0.5} style={{ marginLeft: 30, backgroundColor: "#2CCBEF", width: 140, height: 40, borderRadius: 10, alignItems: 'center', justifyContent: 'center', marginTop: 10 }}>
                                         <Link href='/input'>
                                         <Text style={{ fontWeight: 'bold', color: '#fff', fontSize: 13 }}>Laporkan Sekarang</Text>
                                         </Link>
@@ -158,7 +158,7 @@ const MainScreen = () => {
                         <View style={styles.cardContent}>
                             <Link href="/screens/map" style={styles.buttonCard}>
                                 <Text style={styles.cardTitle}>Informasi Gempa Terkini</Text>
-                                <MaterialCommunityIcons name='chevron-right' size={20} color='#f8981d' />
+                                <MaterialCommunityIcons name='chevron-right' size={20} color='#2CCBEF' />
                             </Link>
                             <View style={styles.textCard}>
                                 <Image
@@ -182,7 +182,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'white'
     },
     containerHeader: {
-        backgroundColor: '#f8981d',
+        backgroundColor: '#2CCBEF',
         padding: 35,
         height: 250,
         borderBottomLeftRadius: 20,
@@ -227,7 +227,7 @@ const styles = StyleSheet.create({
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.25,
         shadowRadius: 3,
-        elevation: 5
+        elevation: 5,
     },
     subCardOverlay2: {
         width: 100,
@@ -251,7 +251,9 @@ const styles = StyleSheet.create({
     text2: {
         fontSize: 12,
         fontFamily: "Poppins-Medium",
-        textAlign: 'justify'
+        textAlign: 'justify',
+        marginLeft:9,
+        marginRight:9
     },
     text3: {
         fontSize: 14,
@@ -276,7 +278,7 @@ const styles = StyleSheet.create({
     },
     cardTitle: {
         fontFamily: 'Poppins-SemiBold',
-        color: '#f8981d',
+        color: '#2CCBEF',
         fontSize: 14
     },
     textTitle: {

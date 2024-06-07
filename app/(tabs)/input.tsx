@@ -13,7 +13,6 @@ import {
   Alert,
   Platform,
   TouchableHighlight,
-  TouchableOpacity,
 } from "react-native";
 import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 import BottomSheetDialog from "../../components/lokasi";
@@ -28,7 +27,6 @@ import storage from "@react-native-firebase/storage";
 
 import * as ImagePicker from "react-native-image-picker";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
-import { useNavigation } from "@react-navigation/native";
 
 const formatTimestamp = (timestamp: string | number | Date) => {
   const date = new Date(timestamp);
@@ -57,11 +55,6 @@ const Input = () => {
   const [namaPengirim, setNamaPengirim] = useState("");
   const [tipeMMI, setTipeMMI] = useState("");
   const [image, setImage] = useState<any>("");
-
-  const navigation = useNavigation();
-  const handleBack = () => {
-    navigation.goBack();
-  };
 
   const sendDatatoFirebase = async () => {
     if (tipeMMI && namaPengirim && location && markerCoordinate) {
@@ -249,9 +242,9 @@ const Input = () => {
         <View style={styles.container}>
           {/*Tipe MMI*/}
           <View style={[styles.elevatedCard]}>
-            <Text style={styles.cardTitle}>Tipe MMI</Text>
+            <Text style={styles.cardTitle}>Skala MMI</Text>
             <Text style={styles.cardSubtitle}>
-              Pilih tipe MMI sesuai dengan gempa yang Anda rasakan
+              Pilih skala MMI sesuai dengan gempa yang Anda rasakan
             </Text>
             <View style={[styles.editText, {}]}>
               <SelectList
@@ -261,7 +254,7 @@ const Input = () => {
                 // boxStyles={{backgroundColor:'pink',}}
                 // dropdownStyles={{backgroundColor:'red'}}
                 searchPlaceholder="Cari"
-                placeholder="Pilih Tipe MMI"
+                placeholder="Skala MMI"
                 setSelected={(val: any) => setTipeMMI(val)}
                 data={formattedDataMMI}
                 save="key"
@@ -365,7 +358,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFFFFF",
   },
   cardTitle: {
-    color: "#f8981d",
+    color: "#2ccbef",
     fontSize: 18,
     fontWeight: "bold",
   },
@@ -383,7 +376,7 @@ const styles = StyleSheet.create({
   },
   button: {
     marginTop: 20,
-    backgroundColor: "#f8981d",
+    backgroundColor: "#2ccbef",
     padding: 10,
     borderRadius: 10,
     alignItems: "center",

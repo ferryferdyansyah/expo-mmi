@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Image, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import Swiper from 'react-native-swiper';
+import { Link } from 'expo-router';
 
 const data = [
     {
@@ -128,7 +129,7 @@ const data = [
 const ImageList = () => {
     return (
         <View style={styles.container}>
-            <Swiper showsPagination={true} style={styles.wrapper} showsButtons={true} >
+            <Swiper showsPagination={true} style={styles.wrapper} showsButtons={true}>
                 {data.map(item => (
                     <View key={item.id} style={styles.slide}>
                         <View style={styles.card}>
@@ -144,7 +145,9 @@ const ImageList = () => {
                             </View>
                         </View>
                         <TouchableOpacity activeOpacity={0.8} style={[styles.btnSubmit, { backgroundColor: `${item.color}` }]}>
-                            <Text style={{ color: `${item.text}`, fontSize: 16, fontWeight: 'bold' }}>Isi Formulir</Text>
+                            <Link href="/input">
+                            <Text style={{ color: `${item.text}`, fontSize: 16, fontWeight: 'bold' }}>Laporkan Gempa</Text>
+                            </Link>
                         </TouchableOpacity>
                     </View>
                 ))}

@@ -3,6 +3,7 @@ import { Stack, SplashScreen } from 'expo-router'
 import { useFonts } from 'expo-font'
 import { useEffect } from 'react'
 
+
 const RootLayout = () => {
     const [fontsLoaded, error] = useFonts({
         "Poppins-Black": require("../assets/fonts/Poppins-Black.ttf"),
@@ -37,8 +38,18 @@ const RootLayout = () => {
             <Stack.Screen name="home" options={{ headerShown: false }} />
             <Stack.Screen name="screens/map" options={{ headerShown: false }} />
             <Stack.Screen name="screens/mmi" options={{
-                title: 'Keterangan MMI',
-                headerStyle: { backgroundColor: '#f8981d' },
+                title: 'Keterangan Level MMI',
+                headerStyle: { backgroundColor: '#2CCBEF' },
+                headerTintColor: '#fff',
+                headerTitleStyle: {
+                    fontFamily: "Poppins-Bold",
+                },
+                headerTitleAlign: 'center',
+                statusBarAnimation: 'slide',
+            }} />
+            <Stack.Screen name="screens/peta" options={{
+                title: 'Peta',
+                headerStyle: { backgroundColor: '#2CCBEF' },
                 headerTintColor: '#fff',
                 headerTitleStyle: {
                     fontFamily: "Poppins-Bold",

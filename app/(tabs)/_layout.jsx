@@ -18,12 +18,15 @@ const TabLayout = () => {
                     name="input"
                     options={{
                         title: "Input",
-                        // headerShown: false,
+                        headerStyle: { backgroundColor: '#2ccbef' },
+                        headerTintColor: 'white',
+                        headerTitleAlign: 'center',
+                        headerTitleStyle: { fontFamily: 'Poppins-SemiBold' },
                         tabBarIcon: ({ focused, size }) => (
                             <View
                                 style={[
                                     styles.mainView,
-                                    { backgroundColor: focused ? '#f8981d' : 'white' },
+                                    { backgroundColor: focused ? '#2ccbef' : 'white' },
                                 ]}>
                                 <MaterialCommunityIcons
                                     name="map-marker-plus"
@@ -47,11 +50,15 @@ const TabLayout = () => {
                     options={{
                         title: "Output",
                         // headerShown: false,
+                        headerStyle: { backgroundColor: '#2ccbef' },
+                        headerTintColor: 'white',
+                        headerTitleAlign: 'center',
+                        headerTitleStyle: { fontFamily: 'Poppins-SemiBold' },
                         tabBarIcon: ({ focused, size }) => (
                             <View
                                 style={[
                                     styles.mainView,
-                                    { backgroundColor: focused ? '#f8981d' : 'white' },
+                                    { backgroundColor: focused ? '#2ccbef' : 'white' },
                                 ]}>
                                 <MaterialCommunityIcons
                                     name="map-marker-plus"
