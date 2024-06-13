@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>API_KEY</key>
+	<string>AIzaSyD0uM18gGWLvLvv0m2-XVwBUPTisTZ-m0E</string>
+	<key>GCM_SENDER_ID</key>
+	<string>697543482445</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.anonymous.myApp</string>
+	<key>PROJECT_ID</key>
+	<string>mmi-app-4b147</string>
+	<key>STORAGE_BUCKET</key>
+	<string>mmi-app-4b147.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:697543482445:ios:7ae441cac5ddb3d9f8d004</string>
+	<key>DATABASE_URL</key>
+	<string>https://mmi-app-4b147-default-rtdb.firebaseio.com</string>
+</dict>
+</plist>

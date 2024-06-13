@@ -16,7 +16,8 @@
       "supportsTablet": true,
       "config": {
         "googleMapsApiKey": "AIzaSyA8gRUsHKHrH2FXot1-OBBnTGMXmTOYxNE"
-      }
+      },
+      "bundleIdentifier": "com.anonymous.myApp"
     },
     "android": {
       "googleServicesFile": "./google-services.json",
@@ -25,21 +26,23 @@
         "backgroundColor": "#ffffff"
       },
       "permissions": [
-        "ACCESS_FINE_LOCATION",
-        "ACCESS_COARSE_LOCATION",
-        "CAMERA",
-        "WRITE_EXTERNAL_STORAGE",
-        "READ_EXTERNAL_STORAGE",
-        "NOTIFICATIONS",
-        "USER_LOCATION",
-        "LOCATION",
-        "INTERNET"
+        "android.permission.ACCESS_FINE_LOCATION",
+        "android.permission.ACCESS_COARSE_LOCATION",
+        "android.permission.CAMERA",
+        "android.permission.WRITE_EXTERNAL_STORAGE",
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.NOTIFICATIONS",
+        "android.permission.USER_LOCATION",
+        "android.permission.LOCATION",
+        "android.permission.INTERNET",
+        "android.permission.RECORD_AUDIO"
       ],
-       "config": {
+      "config": {
         "googleMaps": {
           "apiKey": "AIzaSyA8gRUsHKHrH2FXot1-OBBnTGMXmTOYxNE"
         }
-      }
+      },
+      "package": "com.anonymous.myApp"
     },
     "web": {
       "bundler": "metro",
@@ -48,7 +51,6 @@
     },
     "plugins": [
       "expo-router",
-      "@react-native-firebase/app",
       "expo-notifications",
       [
         "expo-image-picker",
@@ -59,6 +61,14 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "d3ae217d-8759-4ea2-ad88-23140417c40f"
+      }
     }
   }
 }

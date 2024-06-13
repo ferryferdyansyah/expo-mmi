@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { View, Image, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Image, Text, StyleSheet, Pressable } from 'react-native';
 import Swiper from 'react-native-swiper';
-import { Link } from 'expo-router';
+import { Link, router } from 'expo-router';
 
 const data = [
     {
@@ -144,11 +144,14 @@ const ImageList = () => {
                                 </View>
                             </View>
                         </View>
-                        <TouchableOpacity activeOpacity={0.8} style={[styles.btnSubmit, { backgroundColor: `${item.color}` }]}>
-                            <Link href="/input">
+                        {/* <View style={{ alignItems: 'center', backgroundColor:'red', justifyContent: 'center'}}>
+                        <Link href={"/input"} style={[styles.btnSubmit, { backgroundColor: `${item.color}` }]}>
                             <Text style={{ color: `${item.text}`, fontSize: 16, fontWeight: 'bold' }}>Laporkan Gempa</Text>
-                            </Link>
-                        </TouchableOpacity>
+                        </Link>
+                        </View> */}
+                        <Pressable onPress={() => router.push("/input")} activeOpacity={0.8} style={[styles.btnSubmit, { backgroundColor: `${item.color}` }]}>
+                            <Text style={[styles.linkText, { color: `${item.text}` }]}>Laporkan Gempa</Text>
+                        </Pressable>
                     </View>
                 ))}
             </Swiper>
@@ -239,6 +242,20 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         marginTop: 30
+    },
+    link: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        height: '100%',
+        width: '100%',
+        // backgroundColor: 'red'
+    },
+    linkText: {
+        color: 'white',
+        fontSize: 16,
+        fontFamily: 'Poppins-SemiBold',
+        textAlign: 'center'
     },
 });
 

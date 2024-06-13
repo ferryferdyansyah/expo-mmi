@@ -13,5 +13,5 @@
     "**/*.tsx",
     ".expo/types/**/*.ts",
     "expo-env.d.ts"
-, "app/(tabs)/output.jsx", "hooks/useNotifications.js"  ]
+, "app/(tabs)/output.tsx", "hooks/useNotifications.js", "app/screens/peta.tsx"  ]
 }

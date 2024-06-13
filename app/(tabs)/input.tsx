@@ -1,32 +1,31 @@
-import React, { useEffect, useRef, useState } from "react";
-
 import {
-  Button,
-  PermissionsAndroid,
-  SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
-  Image,
+  TextInput,
   View,
-  ToastAndroid,
+  PermissionsAndroid,
   Alert,
-  Platform,
-  TouchableHighlight,
+  ToastAndroid,
+  TouchableOpacity,
+  Image,
+  Button,
 } from "react-native";
+import React, { useEffect, useRef, useState } from "react";
+import { SafeAreaView } from "react-native-safe-area-context";
 import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
-import BottomSheetDialog from "../../components/lokasi";
-import db from "@react-native-firebase/database";
-import { uuidv4 } from "@firebase/util";
-import { dataMMI } from "../../components/dropdown";
-import EditText from "../../components/edittext";
+import * as ImagePicker from "expo-image-picker";
+import { Link, router } from "expo-router";
 import TextButton from "../../components/textbutton";
-import { SelectList } from "react-native-dropdown-select-list";
-import { Dropdown } from "react-native-element-dropdown";
-import storage from "@react-native-firebase/storage";
-
-import * as ImagePicker from "react-native-image-picker";
-import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import { db, storage } from "../../firebaseConfig";
+import { ref as dbRef, push } from "firebase/database";
+import { uuidv4 } from "@firebase/util";
+import {
+  getDownloadURL,
+  ref as storageRef,
+  uploadBytes,
+} from "firebase/storage";
+import * as Location from "expo-location";
 
 const formatTimestamp = (timestamp: string | number | Date) => {
   const date = new Date(timestamp);
@@ -47,104 +46,111 @@ const formatTimestamp = (timestamp: string | number | Date) => {
   return `${formattedDate}, ${formattedTime}`;
 };
 
-const Input = () => {
-  const [markerCoordinate, setMarkerCoordinate] = useState(null);
-  const [, setCurrentLocation] = useState(null);
+const NewDesign = () => {
+  const [markerCoordinate, setMarkerCoordinate] = useState<{
+    latitude: number;
+    longitude: number;
+  } | null>(null);
+  const [currentRegion, setCurrentRegion] = useState<{
+    latitude: number;
+    longitude: number;
+    latitudeDelta: number;
+    longitudeDelta: number;
+  } | null>(null);
   const ref: any = useRef();
-  const [location, setLocationButtonText] = useState("Lokasi");
+
   const [namaPengirim, setNamaPengirim] = useState("");
   const [tipeMMI, setTipeMMI] = useState("");
   const [image, setImage] = useState<any>("");
 
+  const [city, setCity] = useState("");
+  const [province, setProvince] = useState("");
+
+  const mmiValues = [
+    "I MMI",
+    "II MMI",
+    "III MMI",
+    "IV MMI",
+    "V MMI",
+    "VI MMI",
+    "VII MMI",
+    "VIII MMI",
+    "IX MMI",
+    "X MMI",
+    "XI MMI",
+    "XII MMI",
+  ];
+
   const sendDatatoFirebase = async () => {
-    if (tipeMMI && namaPengirim && location && markerCoordinate) {
+    if (!tipeMMI) {
+      Alert.alert("Error", "Anda Belum Memilih Level MMI");
+      return;
+    }
+
+    if (!markerCoordinate) {
+      Alert.alert("Error", "Tekan Button Click Me Untuk Memberitahu Lokasi Spesifik Anda");
+      return;
+    }
+    if (tipeMMI && markerCoordinate && city && province) {
       try {
         const timestamp = Date.now();
         const formattedTimestamp = formatTimestamp(timestamp);
+        let imageURL = "(Tidak Diisi User)";
 
-        let imageURL = null;
-        if (image) {
-          console.log(image);
+        if (image && image.assets && image.assets.length > 0) {
           const response = await fetch(image.assets[0].uri);
           const blob = await response.blob();
           const imageName = `${uuidv4()}.jpg`;
-          const storageRef = storage().ref().child(`data/images/${imageName}`);
-          await storageRef.put(blob);
-          imageURL = await storageRef.getDownloadURL();
+          const storageReference = storageRef(
+            storage,
+            `data/images/${imageName}`
+          );
+          await uploadBytes(storageReference, blob);
+          imageURL = await getDownloadURL(storageReference);
         }
 
-        const data = {
+        await push(dbRef(db, "users"), {
           tipeMMI,
-          namaPengirim,
-          location,
-          imageURL,
+          namaPengirim: namaPengirim || "(Tidak Diisi User)",
+          image: imageURL,
           coordinate: markerCoordinate,
-          timestamp: formattedTimestamp, // Tambahkan properti timestamp
-        };
+          timestamp: formattedTimestamp,
+          city,
+          province,
+        });
+        ToastAndroid.show("Data Terkirim", ToastAndroid.SHORT);
 
-        const response = await fetch(
-          "https://react-native-mmi-app-default-rtdb.asia-southeast1.firebasedatabase.app/data.json?auth=IOf8J6OJbDvEv90XK0LLfscCfaAaFJPNcBRp8PPX",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(data),
-          }
-        );
-
-        if (response.ok) {
-          setTipeMMI("");
-          setNamaPengirim("");
-          setLocationButtonText("Lokasi");
-          setImage(null);
-          setMarkerCoordinate(null);
-          Alert.alert("Sukses", "Data Berhasil Terkirim");
-        } else {
-          throw new Error("Gagal mengirim data ke API");
-        }
+        resetForm();
       } catch (error) {
-        console.error("Error sending data to API: ", error);
-        Alert.alert("Gagal", "Data Gagal Terkirim");
+        console.error("Error sending data to firebase: ", error);
+        ToastAndroid.show("Gagal mengirim data", ToastAndroid.SHORT);
       }
     } else {
-      Alert.alert("Error", "Harap isi Data terlebih dahulu");
+      console.error("Harap isi Data terlebih dahulu");
+      ToastAndroid.show("Harap isi Data terlebih dahulu", ToastAndroid.SHORT);
     }
   };
 
-  const requestLocationPermission = async () => {
-    try {
-      const granted = await PermissionsAndroid.requestMultiple([
-        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-        PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION,
-      ]);
 
-      if (
-        granted["android.permission.ACCESS_FINE_LOCATION"] ===
-          PermissionsAndroid.RESULTS.GRANTED &&
-        granted["android.permission.ACCESS_COARSE_LOCATION"] ===
-          PermissionsAndroid.RESULTS.GRANTED
-      ) {
-        // console.log('Location permission granted');
-        return true;
-      } else {
-        console.log("Location permission denied");
-        return false;
-      }
-    } catch (err) {
-      console.warn(err);
-      return false;
-    }
+  const resetForm = () => {
+    setNamaPengirim("");
+    setTipeMMI("");
+    setImage(null);
+    setMarkerCoordinate(null);
+    setCurrentRegion(null);
+    // Reset city and province if they should be cleared as well
+    //    setCity("");
+    //    setProvince("");
   };
 
   useEffect(() => {
     const checkPermission = async () => {
-      const permissionGranted = await requestLocationPermission();
-      if (permissionGranted) {
-        await getCurrentLocation();
-      } else {
-        console.log("request permission not granted");
+      const { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== "granted") {
+        console.log("Location permission not granted");
+        return;
       }
+      await getCurrentLocation();
     };
     checkPermission();
   }, []);
@@ -159,33 +165,12 @@ const Input = () => {
       }
       const data = await response.json();
       console.log("IP Data:", data);
+      setCity(data.city);
+      setProvince(data.regionName);
       return data;
     } catch (error) {
       console.error("Error fetching IP data:", error);
     }
-  };
-
-  // Contoh penggunaan fungsi
-  getCurrentLocation().then((data) => {
-    if (data) {
-      // Lakukan sesuatu dengan data
-      console.log("Kota:", data.city);
-      console.log("Provinsi:", data.regionName);
-      console.log("Negara:", data.country);
-      console.log("Latitude:", data.lat);
-      console.log("Longitude:", data.lon);
-    }
-  });
-
-  const handleLocationSelect = (data: any) => {
-    setLocationButtonText(
-      data.province + " \n" + data.district + " \n" + data.subDistrict
-    );
-    console.log(data);
-  };
-
-  const handleLocationPress = () => {
-    ref.current.open();
   };
 
   const handleMapPress = (event: any) => {
@@ -193,121 +178,230 @@ const Input = () => {
     setMarkerCoordinate(coordinate);
   };
 
-  const handlePhotoPress = React.useCallback((type: any, options: any) => {
-    Alert.alert("Pilih", "Pilih Media untuk Mengambil Foto", [
-      { text: "Batal", style: "cancel" },
-      {
-        text: "Camera",
-        onPress: () => {
-          ImagePicker.launchCamera(options, setImage);
+  const handleMMIPress = (value: any) => {
+    setTipeMMI(value);
+  };
+
+  const handlePhotoPress = async () => {
+    Alert.alert(
+      "Select Image",
+      "Choose an option",
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
         },
-      },
-      {
-        text: "Gallery",
-        onPress: () => {
-          ImagePicker.launchImageLibrary(options, setImage);
+        {
+          text: "Camera",
+          onPress: async () => {
+            const { status } =
+              await ImagePicker.requestCameraPermissionsAsync();
+            if (status === "granted") {
+              const result = await ImagePicker.launchCameraAsync({
+                mediaTypes: ImagePicker.MediaTypeOptions.Images,
+                allowsEditing: true,
+                quality: 1,
+              });
+              if (!result.canceled) {
+                setImage(result);
+              }
+            } else {
+              Alert.alert("Camera permission denied");
+            }
+          },
         },
-      },
-    ]);
-  }, []);
+        {
+          text: "Gallery",
+          onPress: async () => {
+            const { status } =
+              await ImagePicker.requestMediaLibraryPermissionsAsync();
+            if (status === "granted") {
+              const result = await ImagePicker.launchImageLibraryAsync({
+                mediaTypes: ImagePicker.MediaTypeOptions.Images,
+                allowsEditing: true,
+                quality: 1,
+              });
+              if (!result.canceled) {
+                setImage(result);
+              }
+            } else {
+              Alert.alert("Gallery permission denied");
+            }
+          },
+        },
+      ],
+      { cancelable: true }
+    );
+  };
 
   const handleDeletePhoto = () => {
     setImage(null);
     ToastAndroid.show("Foto dihapus", ToastAndroid.SHORT);
   };
 
-  const formattedDataMMI = dataMMI.map((item) => ({
-    key: item.key,
-    value: (
-      <View>
-        <View>
-          <Text style={{ fontWeight: "bold", marginTop: 3, color: "black" }}>
-            {item.value.split("-")[0]}
-          </Text>
-          <Text style={{ fontSize: 12, marginTop: 5 }}>
-            {item.value.split("-")[1]}
-          </Text>
-          <Text style={{ fontSize: 12 }}>{item.value.split("-")[2]}</Text>
-          {/* <Text style={{fontSize: 12}}>{item.value.split('-')[3]}</Text>
-          <Text style={{fontSize: 12}}>{item.value.split('-')[4]}</Text>
-          <Text style={{fontSize: 12}}>{item.value.split('-')[5]}</Text> */}
-        </View>
-      </View>
-    ),
-  }));
+  const handleNamaPengirim = (text: any) => {
+    setNamaPengirim(text);
+  };
+
+  const handleGetCurrentLocation = async () => {
+    try {
+      const { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== "granted") {
+        Alert.alert("Permission to access location was denied");
+        return;
+      }
+
+      let location = await Location.getCurrentPositionAsync({});
+      const { latitude, longitude } = location.coords;
+      setMarkerCoordinate({ latitude, longitude });
+      setCurrentRegion({
+        latitude,
+        longitude,
+        latitudeDelta: 0.01,
+        longitudeDelta: 0.01,
+      });
+      console.log("User location:", { latitude, longitude });
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
-    <SafeAreaView>
-      <ScrollView>
-        <View style={styles.container}>
-          {/*Tipe MMI*/}
-          <View style={[styles.elevatedCard]}>
-            <Text style={styles.cardTitle}>Skala MMI</Text>
-            <Text style={styles.cardSubtitle}>
-              Pilih skala MMI sesuai dengan gempa yang Anda rasakan
+    <SafeAreaView style={styles.container}>
+      <ScrollView style={{ flex: 1 }}>
+        <View style={styles.header}>
+          <Text style={styles.textHeader}>Input Gempa Yang Anda Rasakan</Text>
+        </View>
+        <View style={styles.body}>
+          {/* CARD SKALA MMI */}
+          <View style={styles.containerMMI}>
+            <Text style={styles.textTitle}>
+              Pilih level MMI yang anda rasakan (Wajib)
             </Text>
-            <View style={[styles.editText, {}]}>
-              <SelectList
-                inputStyles={styles.cardSubtitle}
-                dropdownTextStyles={styles.cardSubtitle}
-                dropdownItemStyles={{ marginTop: -10, height: "auto" }}
-                // boxStyles={{backgroundColor:'pink',}}
-                // dropdownStyles={{backgroundColor:'red'}}
-                searchPlaceholder="Cari"
-                placeholder="Skala MMI"
-                setSelected={(val: any) => setTipeMMI(val)}
-                data={formattedDataMMI}
-                save="key"
+            <Text style={styles.textNote}>
+              *Sangat disarankan untuk membaca detail keterangan level mmi
+            </Text>
+            <View style={styles.cardLevelMMI}>
+              {mmiValues.map((value, index) => (
+                <TouchableOpacity
+                  key={index}
+                  style={[
+                    styles.cardMMI,
+                    {
+                      backgroundColor: tipeMMI === value ? "#3354A5" : "white",
+                    },
+                  ]}
+                  onPress={() => handleMMIPress(value)}
+                >
+                  <Text
+                    style={[
+                      styles.textCard,
+                      { color: tipeMMI === value ? "#fff" : "#000" },
+                    ]}
+                  >
+                    {value}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+            <TouchableOpacity
+              onPress={() => router.push("/screens/mmi")}
+              style={styles.button}
+            >
+              <Text style={styles.textBtn}>
+                Lihat Detail Level MMI
+              </Text>
+            </TouchableOpacity>
+          </View>
+          {/* NAMA USER */}
+          <View style={styles.containerMMI}>
+            <Text style={styles.textTitle}>
+              Masukkan Nama Anda (Opsional)
+            </Text>
+            <View style={styles.containerInput}>
+              <TextInput
+                placeholder="Masukkan Nama"
+                value={namaPengirim}
+                onChangeText={handleNamaPengirim}
+                style={{
+                  backgroundColor: "white",
+                  borderRadius: 10,
+                  padding: 10,
+                }}
               />
             </View>
           </View>
 
-          {/*Data*/}
-          <View style={[styles.elevatedCard]}>
-            <Text style={styles.cardTitle}>Data</Text>
-            <Text style={styles.cardSubtitle}>
-              Masukkan data diri Anda serta foto setelah kejadian
+          {/* AUTOMATE LOCATION */}
+          <View style={styles.containerMMI}>
+            <Text style={styles.textTitle}>
+              Lokasi Anda (Otomatis Terisi)
             </Text>
-            <EditText
-              placeholder="Nama Pengirim"
-              onChangeText={setNamaPengirim}
-            />
-            <TextButton text={location} onPress={handleLocationPress} />
+            <View style={[styles.containerInput,{height: 50, justifyContent: "center",}]}>
+              <Text style={[styles.deadText, {marginLeft:10}]}>
+                {city}, {province}
+              </Text>
+            </View>
+          </View>
+
+          {/* PILIH FOTO */}
+          <View style={styles.containerMMI}>
+            <Text style={{ fontFamily: "Poppins-SemiBold", fontSize: 13 }}>
+              Masukkan Foto Kejadian (Opsional)
+            </Text>
             {actions.map(({ title, type, options }) => {
               if (title === "Select Image") {
                 return (
                   <TextButton
                     key={title}
-                    text="Pilih Foto (Opsional)"
-                    onPress={() => handlePhotoPress(type, options)}
+                    text="Pilih Foto Disini"
+                    onPress={() => handlePhotoPress()}
                   />
                 );
               }
-              return null; // Render nothing for other actions
+              return null;
             })}
 
-            {image?.assets &&
-              image?.assets.map(({ uri }: { uri: string }) => (
-                <View>
-                  <Image source={{ uri: uri }} style={styles.photo} />
+            {image?.assets ? (
+              image.assets.map(({ uri }: { uri: string }) => (
+                <View key={uri}>
+                  <Image
+                    source={{ uri: uri }}
+                    style={styles.image}
+                  />
                   <Button title="hapus" onPress={handleDeletePhoto} />
                 </View>
-              ))}
+              ))
+            ) : (
+              <View style={styles.addImage}>
+                <Text style={styles.deadText}>
+                  Tidak Ada Gambar Yang Dipilih
+                </Text>
+              </View>
+            )}
           </View>
 
-          {/*BottomSheetDialog*/}
-          <BottomSheetDialog onClose={handleLocationSelect} ref={ref} />
-
-          {/*Atur Titik Akurat Lokasi*/}
-          <View style={[styles.elevatedCard]}>
-            <Text style={styles.cardTitle}>Atur Titik Akurat Lokasi</Text>
-            <Text style={styles.cardSubtitle}>
-              Pencet sekali untuk memilih lokasi
+          {/* MAP VIEW */}
+          <View
+            style={styles.containerMMI}
+          >
+            <Text style={styles.textTitle}>
+              Masukkan Lokasi Terkini Anda (Wajib)
             </Text>
-
+            <Text style={styles.textNote}>
+              *Tekan Tombol (Click Me) Dibawah Untuk Menuju Lokasi Anda
+            </Text>
+            <TouchableOpacity
+              onPress={handleGetCurrentLocation}
+              style={[styles.button, {marginTop:'2%', width:'30%'}]}
+            >
+              <Text style={styles.textBtn}>
+                Click Me
+              </Text>
+            </TouchableOpacity>
             <MapView
-              style={styles.map}
-              onPress={handleMapPress}
+              style={{ marginTop: 10, height: 300 }}
+              // onPress={handleMapPress}
               provider={PROVIDER_GOOGLE}
               showsUserLocation={true}
               showsMyLocationButton={true}
@@ -317,6 +411,7 @@ const Input = () => {
                 latitudeDelta: 4.521,
                 longitudeDelta: 4.231,
               }}
+              region={currentRegion || undefined}
             >
               {markerCoordinate && (
                 <Marker
@@ -328,102 +423,144 @@ const Input = () => {
             </MapView>
           </View>
 
-          <TouchableHighlight
+          {/* BUTTON SEND DATA TO FIREBASE */}
+          <TouchableOpacity
             onPress={sendDatatoFirebase}
-            style={styles.button}
+            style={styles.btnSubmit}
           >
-            <Text style={{ color: "white", fontWeight: "bold" }}>
+            <Text style={{ color: "white", fontFamily: "Poppins-SemiBold" }}>
               Kirim Data
             </Text>
-          </TouchableHighlight>
+          </TouchableOpacity>
         </View>
       </ScrollView>
     </SafeAreaView>
   );
 };
 
+export default NewDesign;
+
 const styles = StyleSheet.create({
   container: {
-    marginStart: 20,
-    marginEnd: 20,
-    marginBottom: 40,
+    flex: 1,
+    backgroundColor: "white",
   },
-  elevatedCard: {
-    padding: 20,
-    width: "auto",
-    elevation: 2,
-    marginTop: 20,
-    borderRadius: 20,
-    shadowColor: "#000000",
-    backgroundColor: "#FFFFFF",
+  header: {
+    backgroundColor: "#3354A5",
+    height: "10%",
+    justifyContent: "center",
+    alignItems: "center",
   },
-  cardTitle: {
-    color: "#2ccbef",
+  textHeader: {
+    color: "white",
+    fontFamily: "Poppins-Bold",
     fontSize: 18,
-    fontWeight: "bold",
+    marginTop: "-10%",
   },
-  cardSubtitle: {
-    color: "#000000",
-    fontSize: 14,
+
+  body: {
+    marginTop: "-15%",
+    backgroundColor: "white",
+    marginHorizontal: "2.5%",
+    borderRadius: 10,
+    shadowColor: "#000000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+    height: 1600,
   },
-  editText: {
-    marginTop: 20,
-    // justifyContent: 'flex-end',
+  // STYLE CARD MMI
+  containerMMI: {
+    marginTop: "5%",
+    marginLeft: "5%",
+    marginRight: "5%",
   },
-  map: {
-    marginTop: 20,
-    height: 400,
+  textTitle: {
+    fontFamily: "Poppins-SemiBold",
+    fontSize: 13,
+  },
+  textNote: {
+    fontFamily: "Poppins-Medium",
+    fontSize: 12,
+  },
+  cardLevelMMI: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "space-between",
+  },
+  cardMMI: {
+    borderColor: "#e8e8e8",
+    borderWidth: 1,
+    borderRadius: 5,
+    padding: 10,
+    marginVertical: 5,
+    width: "30%",
+    alignItems: "center",
+    shadowColor: "#000000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  textCard: {
+    fontFamily: "Poppins-Medium",
+    fontSize: 12,
   },
   button: {
-    marginTop: 20,
-    backgroundColor: "#2ccbef",
+    marginTop: "5%",
+    backgroundColor: "#3354A5",
     padding: 10,
-    borderRadius: 10,
+    width: "50%",
+    justifyContent: "center",
     alignItems: "center",
-    marginHorizontal: 20,
+    borderRadius: 5,
   },
-  photo: {
-    width: "auto",
+  textBtn: {
+    color: "white",
+    textAlign: "center",
+    fontFamily: "Poppins-Medium",
+    fontSize: 12,
+  },
+  containerInput: {
+    borderRadius: 5,
+    padding: 5,
+    marginTop: "2%",
+    borderColor: "#e8e8e8",
+    borderWidth: 1,
+  },
+  image: {
+    width: "100%",
     height: 200,
     marginTop: 20,
   },
-  // DROPDOWN ELEMENT
-  dropdown: {
-    margin: 16,
-    height: 50,
-    borderBottomColor: "gray",
-    borderBottomWidth: 0.5,
+  addImage: {
+    width: "100%",
+    height: 230,
+    marginTop: 20,
+    alignItems: "center",
+    justifyContent: "center",
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 5,
   },
-  icon: {
-    marginRight: 5,
+  deadText: {
+    fontFamily: "Poppins-Medium",
+    fontSize: 13,
+    color: "gray",
   },
-  placeholderStyle: {
-    fontSize: 16,
+  btnSubmit: {
+    backgroundColor: "#3354A5",
+    padding: 10,
+    borderRadius: 5,
+    alignItems: "center",
+    marginHorizontal: 20,
+    marginBottom: "5%",
+    marginTop: "5%",
   },
-  selectedTextStyle: {
-    fontSize: 16,
-  },
-  iconStyle: {
-    width: 20,
-    height: 20,
-  },
-  inputSearchStyle: {
-    height: 40,
-    fontSize: 16,
-  },
-  // imageStyle: {
-  //   width: 24,
-  //   height: 24,
-  // },
 });
 
-interface Action {
-  title: string;
-  type: "capture" | "library";
-  options: ImagePicker.CameraOptions | ImagePicker.ImageLibraryOptions;
-}
-
-const actions: Action[] = [
+const actions = [
   {
     title: "Take Image",
     type: "capture",
@@ -444,17 +581,3 @@ const actions: Action[] = [
     },
   },
 ];
-
-if (Platform.OS === "ios") {
-  actions.push({
-    title: "Take Image",
-    type: "capture",
-    options: {
-      saveToPhotos: true,
-      mediaType: "photo",
-      presentationStyle: "fullScreen",
-    },
-  });
-}
-
-export default Input;

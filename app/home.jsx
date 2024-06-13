@@ -1,7 +1,10 @@
 import { View, Text, SafeAreaView, Image, ScrollView, StyleSheet, TouchableOpacity } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useReducer } from 'react'
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons'
-import { Link } from 'expo-router'
+import { Link, router } from 'expo-router'
+import { MotiView } from 'moti';
+import { Skeleton } from 'moti/skeleton';
+import { LinearGradient } from 'expo-linear-gradient';
 
 const MainScreen = () => {
 
@@ -66,6 +69,11 @@ const MainScreen = () => {
         }
     };
 
+    const Spacer = ({ height = 16 }) => <View style={{ height }} />;
+    const [dark, toggle] = useReducer((s) => !s, true);
+
+    const colorMode = dark ? 'dark' : 'light';
+
     return (
         <SafeAreaView style={{ flex: 1 }}>
             {/* Komponen di atas Main Card tetap berada di luar ScrollView */}
@@ -76,16 +84,18 @@ const MainScreen = () => {
                             <Text style={styles.title}>Selamat Datang User!</Text>
                         </View>
                         <View style={styles.subContainerHeader}>
-                            <Text style={styles.subTitle}>Aplikasi MMI</Text>
-                            <MaterialCommunityIcons name='account-circle' size={70} color='white' style={{ marginTop: -40, marginRight: -10 }} />
-                        </View>
-                        <Link href={'/screens/map'} style={[styles.subContainerHeader, { marginTop: 25, width: 340 }]}>
-                            <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-                                <Text style={styles.subTitle}>Informasi Gempa Saat ini</Text>
-                                <MaterialCommunityIcons name='chevron-right' size={20} color='white' />
+                            <View>
+                                <Text style={styles.subTitle}>Aplikasi MMI</Text>
                             </View>
-                        </Link>
+                            <View style={{ backgroundColor: 'white', borderRadius: 60, marginRight: -15, marginTop: -30, padding: 5 }}>
+                                <Image source={require('../assets/images/bmkg.png')} style={{ width: 60, height: 60 }} />
+                            </View>
+                        </View>
                     </View>
+                    <TouchableOpacity onPress={() => router.push('/screens/map')} style={[styles.subContainerHeader, { width: "100%", marginTop:"6%" }]}>
+                            <Text style={[styles.subTitle, { fontSize: 13, fontFamily: 'Poppins-Bold' }]}>Informasi Gempa Saat ini</Text>
+                            <MaterialCommunityIcons name='chevron-right' size={20} color='white' />
+                    </TouchableOpacity>
                 </View>
             </View>
 
@@ -93,14 +103,17 @@ const MainScreen = () => {
             <View style={styles.cardOverlay}>
                 <View style={styles.subCardOverlay1}>
                     {loading ? (
-                        <Text style={styles.text3}>Loading data...</Text>
+                        <MotiView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }} transition={{ type: 'timing'}} from={{ opacity: 0 }} animate={{ opacity: 1 }}>
+                            <Spacer height={'10%'} />
+                            <Skeleton colorMode='light' width={"90%"} height={'90%'} />
+                        </MotiView>
                     ) : (
                         <Text style={styles.text2}>{dataGempa.length > 0 ? dataGempa[0].deskripsi : 'No data available'}</Text>
                     )}
                 </View>
                 <View style={styles.subCardOverlay2}>
-                    <MaterialCommunityIcons name='account-voice' size={50} color='black' />
-                    <Text style={styles.text1}>Breaking News</Text>
+                    <MaterialCommunityIcons name='account-voice' size={45} color='black' />
+                    <Text style={styles.text1}>Info Gempa Terkini</Text>
                 </View>
             </View>
             {/* 3 CARD ROW END */}
@@ -112,10 +125,10 @@ const MainScreen = () => {
                     <View style={{ marginHorizontal: 30 }}>
                         {/* CARD 1 START */}
                         <View style={styles.cardContent}>
-                            <Link href="/screens/mmi" style={styles.buttonCard}>
+                            <TouchableOpacity onPress={() => router.push('/screens/mmi')} style={styles.buttonCard}>
                                 <Text style={styles.cardTitle}>MMI (Modified Mercalli Intensity)</Text>
-                                <MaterialCommunityIcons name='chevron-right' size={20} color='#2CCBEF' />
-                            </Link>
+                                <MaterialCommunityIcons name='chevron-right' size={20} color='#3354A5' />
+                            </TouchableOpacity>
                             <View style={styles.textCard}>
                                 <Image
                                     source={require('../assets/images/mmicenter.png')}
@@ -132,18 +145,16 @@ const MainScreen = () => {
 
                         {/* CARD 2 START */}
                         <View style={styles.cardContent}>
-                            <Link href='/input' style={styles.buttonCard}>
+                            <TouchableOpacity onPress={() => router.push('/input')} style={styles.buttonCard}>
                                 <Text style={styles.cardTitle}>Laporkan Gempa</Text>
-                                <MaterialCommunityIcons name='chevron-right' size={20} color='#2CCBEF' />
-                            </Link>
+                                <MaterialCommunityIcons name='chevron-right' size={20} color='#3354A5' />
+                            </TouchableOpacity>
                             <View style={styles.textCard}>
                                 <View>
                                     <Text style={[styles.textTitle, { textAlign: 'justify', marginLeft: 30, marginRight: 5 }]}>Laporkan sekarang jika anda merasa gempa bumi atau
                                         sudah melihat dampak dari gempa bumi sesuai dengan MMI</Text>
-                                    <TouchableOpacity activeOpacity={0.5} style={{ marginLeft: 30, backgroundColor: "#2CCBEF", width: 140, height: 40, borderRadius: 10, alignItems: 'center', justifyContent: 'center', marginTop: 10 }}>
-                                        <Link href='/input'>
-                                        <Text style={{ fontWeight: 'bold', color: '#fff', fontSize: 13 }}>Laporkan Sekarang</Text>
-                                        </Link>
+                                    <TouchableOpacity onPress={() => router.push('/input')} activeOpacity={0.5} style={{ marginLeft: 30, backgroundColor: "#3354A5", width: 140, height: 40, borderRadius: 10, alignItems: 'center', justifyContent: 'center', marginTop: 10 }}>
+                                            <Text style={{ fontWeight: 'bold', color: '#fff', fontSize: 13 }}>Laporkan Sekarang</Text>
                                     </TouchableOpacity>
                                 </View>
                                 <Image
@@ -156,10 +167,10 @@ const MainScreen = () => {
 
                         {/* CARD 3 START */}
                         <View style={styles.cardContent}>
-                            <Link href="/screens/map" style={styles.buttonCard}>
+                            <TouchableOpacity onPress={() => router.push('/screens/map')} style={styles.buttonCard}>
                                 <Text style={styles.cardTitle}>Informasi Gempa Terkini</Text>
-                                <MaterialCommunityIcons name='chevron-right' size={20} color='#2CCBEF' />
-                            </Link>
+                                <MaterialCommunityIcons name='chevron-right' size={20} color='#3354A5' />
+                            </TouchableOpacity>
                             <View style={styles.textCard}>
                                 <Image
                                     source={require('../assets/images/think.png')}
@@ -182,9 +193,9 @@ const styles = StyleSheet.create({
         backgroundColor: 'white'
     },
     containerHeader: {
-        backgroundColor: '#2CCBEF',
+        backgroundColor: '#3354A5',
         padding: 35,
-        height: 250,
+        height: 240,
         borderBottomLeftRadius: 20,
         borderBottomRightRadius: 20,
     },
@@ -215,7 +226,7 @@ const styles = StyleSheet.create({
         zIndex: 20,
     },
     subCardOverlay1: {
-        width: 250,
+        width: "70%",
         height: 100,
         backgroundColor: 'white',
         alignItems: 'center',
@@ -230,7 +241,7 @@ const styles = StyleSheet.create({
         elevation: 5,
     },
     subCardOverlay2: {
-        width: 100,
+        width: "25%",
         height: 100,
         backgroundColor: 'white',
         alignItems: 'center',
@@ -246,14 +257,15 @@ const styles = StyleSheet.create({
     },
     text1: {
         fontSize: 12,
-        fontFamily: "Poppins-Medium"
+        fontFamily: "Poppins-Medium",
+        textAlign: 'center',
     },
     text2: {
-        fontSize: 12,
+        fontSize: 13,
         fontFamily: "Poppins-Medium",
         textAlign: 'justify',
-        marginLeft:9,
-        marginRight:9
+        marginLeft: 9,
+        marginRight: 9
     },
     text3: {
         fontSize: 14,
@@ -278,7 +290,7 @@ const styles = StyleSheet.create({
     },
     cardTitle: {
         fontFamily: 'Poppins-SemiBold',
-        color: '#2CCBEF',
+        color: '#3354A5',
         fontSize: 14
     },
     textTitle: {

@@ -39,7 +39,7 @@ const RootLayout = () => {
             <Stack.Screen name="screens/map" options={{ headerShown: false }} />
             <Stack.Screen name="screens/mmi" options={{
                 title: 'Keterangan Level MMI',
-                headerStyle: { backgroundColor: '#2CCBEF' },
+                headerStyle: { backgroundColor: '#3354A5' },
                 headerTintColor: '#fff',
                 headerTitleStyle: {
                     fontFamily: "Poppins-Bold",
@@ -49,7 +49,7 @@ const RootLayout = () => {
             }} />
             <Stack.Screen name="screens/peta" options={{
                 title: 'Peta',
-                headerStyle: { backgroundColor: '#2CCBEF' },
+                headerStyle: { backgroundColor: '#3354A5' },
                 headerTintColor: '#fff',
                 headerTitleStyle: {
                     fontFamily: "Poppins-Bold",

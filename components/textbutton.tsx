@@ -26,7 +26,7 @@ class TextButton extends React.Component<TextButtonProps> {
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 20,
+    marginTop: '2%',
     flexDirection: "row",
     alignItems: "center",
     borderColor: "#e8e8e8",

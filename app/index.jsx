@@ -1,7 +1,7 @@
-import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native'
+import { View, Text, TouchableOpacity, StyleSheet, Image, Pressable } from 'react-native'
 import React from 'react'
-import { Link } from 'expo-router'
-import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+import { Link, router } from 'expo-router'
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const App = () => {
     return (
@@ -13,18 +13,18 @@ const App = () => {
                 </View>
                 <View style={{ width: "100%", height: "60%", marginHorizontal: 20, justifyContent: 'center', alignItems: 'center' }}>
                     <Image source={require('../assets/images/fist.png')} style={{ width: "95%", height: "95%" }} />
-                    <Text style={{ textAlign: 'center', fontSize: 13, fontFamily: "Poppins-Regular" }}>Ayo ikut berkontribusi bersama kami dalam pelaporan gempa yang anda rasakan</Text>
+                    <Text style={{ textAlign: 'center', fontSize: 13, fontFamily: "Poppins-Medium" }}>Ayo ikut berkontribusi bersama kami dalam pelaporan gempa yang anda rasakan</Text>
                 </View>
             </View>
             <View style={{ alignItems: 'center', marginHorizontal: 40 }}>
-                <TouchableOpacity activeOpacity={0.8} style={{ width: 60, backgroundColor: '#2ccbef', alignItems: 'center', justifyContent: 'center', height: 60, borderRadius: 50 }}>
-                    <Link href="/home">
+                <TouchableOpacity onPress={() => router.push("/home")} activeOpacity={0.8} style={{ width: 60, backgroundColor: '#3354A5', alignItems: 'center', justifyContent: 'center', height: 60, borderRadius: 50 }}>
+                    {/* <Link href="/home"> */}
                         <MaterialCommunityIcons
                             name="arrow-right-thin"
                             size={40}
                             color="white"
                         />
-                    </Link>
+                    {/* </Link> */}
                 </TouchableOpacity>
             </View>
         </View>
@@ -49,22 +49,5 @@ const styles = StyleSheet.create({
         color: "black",
         fontSize: 18,
         textAlign: 'center'
-    },
-    buttonContainer: {
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-    },
-    button: {
-        backgroundColor: "#4CAF50",
-        paddingVertical: 15,
-        paddingHorizontal: 40,
-        marginVertical: 10,
-        borderRadius: 5,
-    },
-    buttonText: {
-        color: "#fff",
-        fontSize: 16,
-        fontWeight: "bold",
     },
 });

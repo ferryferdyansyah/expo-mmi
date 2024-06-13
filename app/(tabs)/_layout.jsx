@@ -10,23 +10,18 @@ const TabLayout = () => {
                 inactiveColor="black"
                 barStyle={{ backgroundColor: 'black' }}
                 screenOptions={{
-                    // headerShown: false,
+                    headerShown: false,
                     tabBarShowLabel: false,
                     tabBarBackground: () => { },
                 }}>
                 <Tabs.Screen
                     name="input"
                     options={{
-                        title: "Input",
-                        headerStyle: { backgroundColor: '#2ccbef' },
-                        headerTintColor: 'white',
-                        headerTitleAlign: 'center',
-                        headerTitleStyle: { fontFamily: 'Poppins-SemiBold' },
                         tabBarIcon: ({ focused, size }) => (
                             <View
                                 style={[
                                     styles.mainView,
-                                    { backgroundColor: focused ? '#2ccbef' : 'white' },
+                                    { backgroundColor: focused ? '#3354A5' : 'white' },
                                 ]}>
                                 <MaterialCommunityIcons
                                     name="map-marker-plus"
@@ -49,8 +44,8 @@ const TabLayout = () => {
                     name="output"
                     options={{
                         title: "Output",
-                        // headerShown: false,
-                        headerStyle: { backgroundColor: '#2ccbef' },
+                        headerShown: true,
+                        headerStyle: { backgroundColor: '#3354A5' },
                         headerTintColor: 'white',
                         headerTitleAlign: 'center',
                         headerTitleStyle: { fontFamily: 'Poppins-SemiBold' },
@@ -58,7 +53,7 @@ const TabLayout = () => {
                             <View
                                 style={[
                                     styles.mainView,
-                                    { backgroundColor: focused ? '#2ccbef' : 'white' },
+                                    { backgroundColor: focused ? '#3354A5' : 'white' },
                                 ]}>
                                 <MaterialCommunityIcons
                                     name="map-marker-plus"

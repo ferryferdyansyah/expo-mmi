@@ -3,11 +3,14 @@ import { Text, View, StyleSheet, ScrollView, TouchableHighlight, Animated } from
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import { Link } from 'expo-router';
+import { MotiView } from 'moti';
+import { Skeleton } from 'moti/skeleton';
 
 const App = () => {
     const [dataGempa, setDataGempa] = useState([]);
     const [latitude, setLatitude] = useState(null);
     const [longitude, setLongitude] = useState(null);
+    const [loading, setLoading] = useState(true);  // State to indicate loading
     const scaleValue = useRef(new Animated.Value(1)).current;
     const opacityValue = useRef(new Animated.Value(1)).current;
 
@@ -40,6 +43,8 @@ const App = () => {
                 }
             } catch (error) {
                 console.error('Error:', error);
+            } finally {
+                setLoading(false);  // Set loading to false after data is fetched
             }
         };
 
@@ -138,6 +143,11 @@ const App = () => {
                         <View>
                             <Text style={styles.title}>Gempabumi M ≤ 5</Text>
                         </View>
+                        {loading ? (
+                            <MotiView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }} transition={{ type: 'timing' }} from={{ opacity: 0 }} animate={{ opacity: 1 }}>
+                                <Skeleton colorMode='light' width={'95%'} height={80} />
+                            </MotiView>
+                        ) : (
                         <View style={styles.content}>
                             <View style={{ alignItems: 'center' }}>
                                 <View style={styles.wrapIconTop}>
@@ -160,8 +170,19 @@ const App = () => {
                                 </View>
                             </View>
                         </View>
+                        )}
                         <View style={styles.tidakBerpotensi}>
-                            <Text style={{ color: 'black', fontWeight: 'bold', textAlign: 'center', fontSize: 12 }}>Potensi</Text>
+                            {loading ? (
+                                <MotiView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }} transition={{ type: 'timing' }} from={{ opacity: 0 }} animate={{ opacity: 1 }}>
+                                    <Skeleton
+                                        width={'100%'}
+                                        height={40}
+                                        colorMode='light'
+                                        style={{ marginTop: 5 }}
+                                    />
+                                </MotiView> ) : (
+                                    <Text style={{ color: 'black', fontFamily: "Poppins-SemiBold", textAlign: 'center', fontSize: 16 }}>{dataGempa.length > 0 ? dataGempa[0].dirasakan : ''}</Text>
+                                )}
                         </View>
                     </View>
 
@@ -171,7 +192,18 @@ const App = () => {
                                 <MaterialCommunityIcons name="calendar-clock" style={styles.iconBot} />
                                 <View style={{ marginLeft: 10 }}>
                                     <Text style={{ fontFamily: "Poppins-Regular" }}>Waktu :</Text>
-                                    <Text style={styles.textIconBot}>{dataGempa.length > 0 ? dataGempa[0].waktu : 'Load Data...'}</Text>
+                                    {loading? (
+                                        <MotiView transition={{ type: 'timing' }} from={{ opacity: 0 }} animate={{ opacity: 1 }}>
+                                            <Skeleton
+                                                width={'90%'}
+                                                height={20}
+                                                colorMode='light'
+                                                style={{ marginTop: 5 }}
+                                            />
+                                        </MotiView>
+                                    ) : (
+                                        <Text style = {styles.textIconBot}>{dataGempa.length > 0 ? dataGempa[0].waktu : ''}</Text>
+                                    )}
                                 </View>
                             </View>
                         </View>
@@ -181,7 +213,18 @@ const App = () => {
                                 <MaterialCommunityIcons name="target" style={styles.iconBot} />
                                 <View style={{ marginLeft: 10 }}>
                                     <Text style={{ fontFamily: "Poppins-Regular" }}>Lokasi Gempa :</Text>
-                                    <Text style={[styles.textIconBot, { marginRight: 10 }]}>{dataGempa.length > 0 ? dataGempa[0].wilayah : 'Load Data...'}</Text>
+                                    {loading ? (
+                                        <MotiView transition={{ type: 'timing' }} from={{ opacity: 0 }} animate={{ opacity: 1 }}>
+                                            <Skeleton
+                                                width={'90%'}
+                                                height={20}
+                                                colorMode='light'
+                                                style={{ marginTop: 5 }}
+                                            />
+                                        </MotiView>
+                                    ) : (
+                                        <Text style={styles.textIconBot}>{dataGempa.length > 0 ? dataGempa[0].wilayah : ''}</Text>
+                                    )}
                                 </View>
                             </View>
                         </View>
@@ -191,14 +234,25 @@ const App = () => {
                                 <MaterialCommunityIcons name="map-marker-distance" style={styles.iconBot} />
                                 <View style={{ marginLeft: 10 }}>
                                     <Text style={{ fontFamily: "Poppins-Regular" }}>Koordinat :</Text>
-                                    <Text style={styles.textIconBot}>{dataGempa.length > 0 ? dataGempa[0].lokasi : 'Load Data...'}</Text>
+                                    {loading ? (
+                                        <MotiView transition={{ type: 'timing' }} from={{ opacity: 0 }} animate={{ opacity: 1 }}>
+                                            <Skeleton
+                                                width={'90%'}
+                                                height={20}
+                                                colorMode='light'
+                                                style={{ marginTop: 5 }}
+                                            />
+                                        </MotiView>
+                                    ) : (
+                                        <Text style={styles.textIconBot}>{dataGempa.length > 0 ? dataGempa[0].lokasi : ''}</Text>
+                                    )}
                                 </View>
                             </View>
                         </View>
                     </View>
 
                     <View style={{ alignItems: 'center', marginTop: 0, backgroundColor: 'white', justifyContent: 'center', padding: 10, marginHorizontal: 0, marginVertical: 5, borderRadius: 25 }}>
-                        <TouchableHighlight style={{ backgroundColor: '#2ccbef', width: 230, height: 40, borderRadius: 15 }}>
+                        <TouchableHighlight style={{ backgroundColor: '#3354A5', width: 230, height: 40, borderRadius: 15 }}>
                             <Link href='/screens/peta' style={{ lineHeight: 40, textAlign: 'center', color: 'white', fontWeight: 'bold' }}>Lihat</Link>
                         </TouchableHighlight>
                     </View>
@@ -273,7 +327,7 @@ const styles = StyleSheet.create({
         marginTop: 10
     },
     iconBot: {
-        color: '#2ccbef',
+        color: '#3354A5',
         fontSize: 25
     },
     textIconBot: {
