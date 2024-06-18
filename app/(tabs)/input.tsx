@@ -66,6 +66,11 @@ const NewDesign = () => {
   const [city, setCity] = useState("");
   const [province, setProvince] = useState("");
 
+  const [kecamatan, setKecamatan] = useState("");
+  const [kabupaten, setKabupaten] = useState("");
+
+  const [lokasi, setLokasi] = useState("");
+
   const mmiValues = [
     "I MMI",
     "II MMI",
@@ -88,10 +93,13 @@ const NewDesign = () => {
     }
 
     if (!markerCoordinate) {
-      Alert.alert("Error", "Tekan Button Click Me Untuk Memberitahu Lokasi Spesifik Anda");
+      Alert.alert(
+        "Error",
+        "Tekan Button Click Me Untuk Memberitahu Lokasi Spesifik Anda"
+      );
       return;
     }
-    if (tipeMMI && markerCoordinate && city && province) {
+    if (tipeMMI && markerCoordinate) {
       try {
         const timestamp = Date.now();
         const formattedTimestamp = formatTimestamp(timestamp);
@@ -115,15 +123,16 @@ const NewDesign = () => {
           image: imageURL,
           coordinate: markerCoordinate,
           timestamp: formattedTimestamp,
-          city,
-          province,
+          lokasi
+          // kecamatan,
+          // kabupaten,
         });
-        ToastAndroid.show("Data Terkirim", ToastAndroid.SHORT);
+        Alert.alert("Sukses", "Data Berhasil Terkirim");
 
         resetForm();
       } catch (error) {
         console.error("Error sending data to firebase: ", error);
-        ToastAndroid.show("Gagal mengirim data", ToastAndroid.SHORT);
+        Alert.alert("Data Gagal Terkirim", "Periksa Kembali Data Anda");
       }
     } else {
       console.error("Harap isi Data terlebih dahulu");
@@ -131,13 +140,15 @@ const NewDesign = () => {
     }
   };
 
-
   const resetForm = () => {
     setNamaPengirim("");
     setTipeMMI("");
     setImage(null);
     setMarkerCoordinate(null);
     setCurrentRegion(null);
+    setLokasi("");
+    // setKecamatan("");
+    // setKabupaten("");
     // Reset city and province if they should be cleared as well
     //    setCity("");
     //    setProvince("");
@@ -150,26 +161,52 @@ const NewDesign = () => {
         console.log("Location permission not granted");
         return;
       }
-      await getCurrentLocation();
+      // await handleGetCurrentLocation();
     };
     checkPermission();
   }, []);
 
-  const getCurrentLocation = async () => {
-    const url = "http://ip-api.com/json/";
+  const getGeolocationData = async (latitude: number, longitude: number) => {
+    const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&zoom=14&addressdetails=1`;
 
     try {
       const response = await fetch(url);
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
       const data = await response.json();
-      console.log("IP Data:", data);
-      setCity(data.city);
-      setProvince(data.regionName);
-      return data;
+      // const { suburb, city } = data.address;
+      // return { kecamatan: suburb, kabupaten: city };
+      return data.display_name;
     } catch (error) {
-      console.error("Error fetching IP data:", error);
+      console.error(error);
+      return null;
+    }
+  };
+
+  const handleGetCurrentLocation = async () => {
+    try {
+      const { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== "granted") {
+        Alert.alert("Permission to access location was denied");
+        return;
+      }
+
+      let location = await Location.getCurrentPositionAsync({});
+      const { latitude, longitude } = location.coords;
+      setMarkerCoordinate({ latitude, longitude });
+      setCurrentRegion({
+        latitude,
+        longitude,
+        latitudeDelta: 0.01,
+        longitudeDelta: 0.01,
+      });
+      console.log("User location:", { latitude, longitude });
+      const geoData = await getGeolocationData(latitude, longitude);
+      if (geoData) {
+        // setKecamatan(geoData.kecamatan);
+        // setKabupaten(geoData.kabupaten);
+        setLokasi(geoData);
+      }
+    } catch (error) {
+      console.error(error);
     }
   };
 
@@ -243,29 +280,6 @@ const NewDesign = () => {
     setNamaPengirim(text);
   };
 
-  const handleGetCurrentLocation = async () => {
-    try {
-      const { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== "granted") {
-        Alert.alert("Permission to access location was denied");
-        return;
-      }
-
-      let location = await Location.getCurrentPositionAsync({});
-      const { latitude, longitude } = location.coords;
-      setMarkerCoordinate({ latitude, longitude });
-      setCurrentRegion({
-        latitude,
-        longitude,
-        latitudeDelta: 0.01,
-        longitudeDelta: 0.01,
-      });
-      console.log("User location:", { latitude, longitude });
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView style={{ flex: 1 }}>
@@ -308,16 +322,12 @@ const NewDesign = () => {
               onPress={() => router.push("/screens/mmi")}
               style={styles.button}
             >
-              <Text style={styles.textBtn}>
-                Lihat Detail Level MMI
-              </Text>
+              <Text style={styles.textBtn}>Lihat Detail Level MMI</Text>
             </TouchableOpacity>
           </View>
           {/* NAMA USER */}
           <View style={styles.containerMMI}>
-            <Text style={styles.textTitle}>
-              Masukkan Nama Anda (Opsional)
-            </Text>
+            <Text style={styles.textTitle}>Masukkan Nama Anda (Opsional)</Text>
             <View style={styles.containerInput}>
               <TextInput
                 placeholder="Masukkan Nama"
@@ -334,12 +344,18 @@ const NewDesign = () => {
 
           {/* AUTOMATE LOCATION */}
           <View style={styles.containerMMI}>
-            <Text style={styles.textTitle}>
-              Lokasi Anda (Otomatis Terisi)
+            <Text style={styles.textTitle}>Lokasi Anda (Otomatis Terisi)</Text>
+            <Text style={styles.textNote}>
+              *Lokasi Anda Akan Otomatis Terisi Ketika Menekan Tombol (Click Me)
             </Text>
-            <View style={[styles.containerInput,{height: 50, justifyContent: "center",}]}>
-              <Text style={[styles.deadText, {marginLeft:10}]}>
-                {city}, {province}
+            <View
+              style={[
+                styles.containerInput,
+                { height: 50, justifyContent: "center" },
+              ]}
+            >
+              <Text style={[styles.deadText, { marginLeft: 10 }]}>
+                {lokasi ? `${lokasi}` : "Loading..."}
               </Text>
             </View>
           </View>
@@ -365,10 +381,7 @@ const NewDesign = () => {
             {image?.assets ? (
               image.assets.map(({ uri }: { uri: string }) => (
                 <View key={uri}>
-                  <Image
-                    source={{ uri: uri }}
-                    style={styles.image}
-                  />
+                  <Image source={{ uri: uri }} style={styles.image} />
                   <Button title="hapus" onPress={handleDeletePhoto} />
                 </View>
               ))
@@ -382,22 +395,18 @@ const NewDesign = () => {
           </View>
 
           {/* MAP VIEW */}
-          <View
-            style={styles.containerMMI}
-          >
+          <View style={styles.containerMMI}>
             <Text style={styles.textTitle}>
               Masukkan Lokasi Terkini Anda (Wajib)
             </Text>
             <Text style={styles.textNote}>
-              *Tekan Tombol (Click Me) Dibawah Untuk Menuju Lokasi Anda
+              *Tekan Tombol (Click Me) Dibawah Untuk Menandai Lokasi Anda
             </Text>
             <TouchableOpacity
               onPress={handleGetCurrentLocation}
-              style={[styles.button, {marginTop:'2%', width:'30%'}]}
+              style={[styles.button, { marginTop: "2%", width: "30%" }]}
             >
-              <Text style={styles.textBtn}>
-                Click Me
-              </Text>
+              <Text style={styles.textBtn}>Click Me</Text>
             </TouchableOpacity>
             <MapView
               style={{ marginTop: 10, height: 300 }}
@@ -468,7 +477,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
-    height: 1600,
+    height: 1610,
   },
   // STYLE CARD MMI
   containerMMI: {
@@ -481,7 +490,7 @@ const styles = StyleSheet.create({
     fontSize: 13,
   },
   textNote: {
-    fontFamily: "Poppins-Medium",
+    fontFamily: "Poppins-Regular",
     fontSize: 12,
   },
   cardLevelMMI: {

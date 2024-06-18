@@ -6,7 +6,7 @@ import { Link, router } from 'expo-router';
 const data = [
     {
         id: '1',
-        image: require('../../assets/images/mmi1.png'),
+        image: require('../../assets/images/mmi/mmi1.png'),
         color: '#ECECEC',
         text: 'black',
         description: 'I MMI',
@@ -16,7 +16,7 @@ const data = [
     },
     {
         id: '2',
-        image: require('../../assets/images/mmi2.png'),
+        image: require('../../assets/images/mmi/mmi2.png'),
         color: '#DDDDD7',
         text: 'black',
         description: 'II MMI',
@@ -26,7 +26,7 @@ const data = [
     },
     {
         id: '3',
-        image: require('../../assets/images/mmi3.png'),
+        image: require('../../assets/images/mmi/mmi3.png'),
         color: '#4BAE4C',
         text: 'white',
         description: 'III MMI',
@@ -36,7 +36,7 @@ const data = [
     },
     {
         id: '4',
-        image: require('../../assets/images/mmi4.png'),
+        image: require('../../assets/images/mmi/mmi4.png'),
         color: '#4BAE4C',
         text: 'white',
         description: 'IV MMI',
@@ -46,7 +46,7 @@ const data = [
     },
     {
         id: '5',
-        image: require('../../assets/images/mmi5.png'),
+        image: require('../../assets/images/mmi/mmi5.png'),
         color: '#4BAE4C',
         text: 'white',
         description: 'V MMI',
@@ -56,7 +56,7 @@ const data = [
     },
     {
         id: '6',
-        image: require('../../assets/images/mmi6.png'),
+        image: require('../../assets/images/mmi/mmi6.png'),
         color: '#FEEA3B',
         text: 'black',
         description: 'VI MMI',
@@ -66,7 +66,7 @@ const data = [
     },
     {
         id: '7',
-        image: require('../../assets/images/mmi7.png'),
+        image: require('../../assets/images/mmi/mmi7.png'),
         color: '#F8971D',
         text: 'white',
         description: 'VII MMI',
@@ -76,7 +76,7 @@ const data = [
     },
     {
         id: '8',
-        image: require('../../assets/images/mmi8.png'),
+        image: require('../../assets/images/mmi/mmi8.png'),
         color: '#F8971D',
         text: 'white',
         description: 'VIII MMI',
@@ -86,7 +86,7 @@ const data = [
     },
     {
         id: '9',
-        image: require('../../assets/images/mmi9.png'),
+        image: require('../../assets/images/mmi/mmi9.png'),
         color: '#EF4338',
         text: 'white',
         description: 'IX MMI',
@@ -96,7 +96,7 @@ const data = [
     },
     {
         id: '10',
-        image: require('../../assets/images/mmi10.png'),
+        image: require('../../assets/images/mmi/mmi10.png'),
         color: '#EF4338',
         text: 'white',
         description: 'X MMI',
@@ -106,7 +106,7 @@ const data = [
     },
     {
         id: '11',
-        image: require('../../assets/images/mmi11.png'),
+        image: require('../../assets/images/mmi/mmi11.png'),
         color: '#EF4338',
         text: 'white',
         description: 'XI MMI',
@@ -116,7 +116,7 @@ const data = [
     },
     {
         id: '12',
-        image: require('../../assets/images/mmi12.png'),
+        image: require('../../assets/images/mmi/mmi12.png'),
         color: '#EF4338',
         text: 'white',
         description: 'XII MMI',
@@ -129,7 +129,7 @@ const data = [
 const ImageList = () => {
     return (
         <View style={styles.container}>
-            <Swiper showsPagination={true} style={styles.wrapper} showsButtons={true}>
+            <Swiper showsPagination={true} style={styles.wrapper} showsButtons={false}>
                 {data.map(item => (
                     <View key={item.id} style={styles.slide}>
                         <View style={styles.card}>

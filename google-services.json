@@ -1,22 +1,22 @@
 {
   "project_info": {
-    "project_number": "541576186641",
-    "firebase_url": "https://react-native-mmi-app-default-rtdb.asia-southeast1.firebasedatabase.app",
-    "project_id": "react-native-mmi-app",
-    "storage_bucket": "react-native-mmi-app.appspot.com"
+    "project_number": "697543482445",
+    "firebase_url": "https://mmi-app-4b147-default-rtdb.firebaseio.com",
+    "project_id": "mmi-app-4b147",
+    "storage_bucket": "mmi-app-4b147.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:541576186641:web:e9f31a1350f26cb388dab0",
+        "mobilesdk_app_id": "1:697543482445:web:a40150cd541d2527f8d004",
         "android_client_info": {
-          "package_name": "com.awesomeproject"
+          "package_name": "com.anonymous.myApp"
         }
       },
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyDv45Us8BhCgbxm-f0kU5vJFIuUcLyYvDE"
+          "current_key": "AIzaSyC_zFqNlSheIz9JJfCCm2bXm6azokQVghU"
         }
       ],
       "services": {
@@ -27,15 +27,15 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:541576186641:web:e9f31a1350f26cb388dab0",
+        "mobilesdk_app_id": "1:697543482445:web:a40150cd541d2527f8d004",
         "android_client_info": {
-          "package_name": "com.rism.MMiInfo"
+          "package_name": "com.anonymous.myApp"
         }
       },
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyDv45Us8BhCgbxm-f0kU5vJFIuUcLyYvDE"
+          "current_key": "AIzaSyC_zFqNlSheIz9JJfCCm2bXm6azokQVghU"
         }
       ],
       "services": {
@@ -46,15 +46,15 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:541576186641:web:e9f31a1350f26cb388dab0",
+        "mobilesdk_app_id": "1:697543482445:web:a40150cd541d2527f8d004",
         "android_client_info": {
-          "package_name": "com.rism.mmiinfo"
+          "package_name": "com.anonymous.myApp"
         }
       },
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyDv45Us8BhCgbxm-f0kU5vJFIuUcLyYvDE"
+          "current_key": "AIzaSyC_zFqNlSheIz9JJfCCm2bXm6azokQVghU"
         }
       ],
       "services": {

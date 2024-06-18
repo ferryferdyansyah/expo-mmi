@@ -14,7 +14,7 @@ const MainScreen = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch('https://react-native-mmi-app-default-rtdb.asia-southeast1.firebasedatabase.app/user-input.json?auth=IOf8J6OJbDvEv90XK0LLfscCfaAaFJPNcBRp8PPX');
+                const response = await fetch('https://mmi-app-4b147-default-rtdb.firebaseio.com/admin.json?auth=381P6u7ltbT20XFoAygPBPjUXqG6nHtbCqJg5rgs');
                 if (!response.ok) {
                     throw new Error('Gagal mengambil data');
                 }

@@ -1,10 +1,10 @@
 {
   "expo": {
-    "name": "myApp",
-    "slug": "myApp",
+    "name": "MMI",
+    "slug": "MMI",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/images/icon1.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "splash": {
@@ -22,7 +22,7 @@
     "android": {
       "googleServicesFile": "./google-services.json",
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "foregroundImage": "./assets/images/icon1.png",
         "backgroundColor": "#ffffff"
       },
       "permissions": [
@@ -51,7 +51,6 @@
     },
     "plugins": [
       "expo-router",
-      "expo-notifications",
       [
         "expo-image-picker",
         {
@@ -67,7 +66,7 @@
         "origin": false
       },
       "eas": {
-        "projectId": "d3ae217d-8759-4ea2-ad88-23140417c40f"
+        "projectId": "dd9642a4-0041-44ed-9a64-b3cf375d5a30"
       }
     }
   }

@@ -17,7 +17,7 @@ const App = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch('https://react-native-mmi-app-default-rtdb.asia-southeast1.firebasedatabase.app/user-input.json?auth=IOf8J6OJbDvEv90XK0LLfscCfaAaFJPNcBRp8PPX');
+                const response = await fetch('https://mmi-app-4b147-default-rtdb.firebaseio.com/admin.json?auth=381P6u7ltbT20XFoAygPBPjUXqG6nHtbCqJg5rgs');
                 if (!response.ok) {
                     throw new Error('Gagal mengambil data');
                 }
@@ -166,7 +166,7 @@ const App = () => {
                             <View style={{ alignItems: 'center', }}>
                                 <View style={styles.wrapIconTop}>
                                     <MaterialCommunityIcons name="map-marker-radius" style={[styles.iconTop, { color: '#f8981d', fontSize: 30 }]} />
-                                    <Text style={[styles.textIconTop, { fontSize: 14 }]}>{dataGempa.length > 0 ? dataGempa[0].lokasi : ''},</Text>
+                                    <Text style={[styles.textIconTop, { fontSize: 14 }]}>{dataGempa.length > 0 ? dataGempa[0].lokasi : ''}</Text>
                                 </View>
                             </View>
                         </View>
